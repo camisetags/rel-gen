@@ -8,6 +8,5 @@ defmodule GenReport.Common do
   def tokenize_name(name) do
     name
     |> String.downcase()
-    |> String.to_atom()
   end
 end

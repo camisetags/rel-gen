@@ -18,8 +18,7 @@ defmodule GenReport.HoursCalculator do
   defp extract_person_content(names) do
     names
     |> Enum.reduce(%{}, fn person, acc ->
-      name = person |> String.downcase() |> String.to_atom()
-      Map.put(acc, name, [])
+      Map.put(acc, Common.tokenize_name(person), [])
     end)
   end
 
