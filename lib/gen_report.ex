@@ -1,21 +1,16 @@
 defmodule GenReport do
   alias GenReport.HoursCalculator
   alias GenReport.MonthsCalculator
+  alias GenReport.Parser
 
   def build(filename) when is_binary(filename) do
-    File.stream!(filename)
-    |> Enum.map(&parse_lines/1)
+    filename
+    |> Parser.parse_file()
+    |> Enum.map(&parse_lines_to_struct/1)
     |> def_report_struct()
   end
 
   def build(filename) when not is_binary(filename), do: {:error, "filename must me string"}
-
-  defp parse_lines(line) do
-    line
-    |> String.trim()
-    |> String.split(",")
-    |> parse_lines_to_struct()
-  end
 
   defp parse_lines_to_struct([nome, horas, dia, mes, ano]) do
     %{
