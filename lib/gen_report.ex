@@ -11,7 +11,8 @@ defmodule GenReport do
     |> def_report_struct()
   end
 
-  def build(filename) when not is_binary(filename), do: {:error, "Insira o nome de um arquivo"}
+  def build(filename) when not is_binary(filename), do: {:error, "filename must me string"}
+  def build, do: {:error, "Insira o nome de um arquivo"}
 
   defp parse_lines_to_struct([nome, horas, dia, mes, ano]) do
     %{

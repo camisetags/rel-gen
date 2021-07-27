@@ -23,7 +23,7 @@ defmodule GenReport.YearCalculator do
     years
     |> Enum.reduce(%{}, fn year, acc ->
       month_list = filter_month(names_struct, person_token_name, year)
-      Map.put(acc, year, month_list)
+      Map.put(acc, tokenize_year(year), month_list)
     end)
   end
 
@@ -36,17 +36,30 @@ defmodule GenReport.YearCalculator do
   defp filter_month(names_struct, person_token_name, year) do
     names_struct[person_token_name]
     |> Enum.filter(fn person -> person.year == year end)
-    |> Enum.map(fn person -> parse_int(person.year) end)
+    |> Enum.map(fn person -> parse_int(person.hours) end)
     |> Enum.sum()
   end
 
   defp parse_int(hour) do
-    hour
-    |> Integer.parse()
-    |> get_int_part()
+    try do
+      hour
+      |> Integer.parse()
+      |> get_int_part()
+    rescue
+      FunctionClauseError -> hour
+    end
   end
 
   defp get_int_part({num, _}), do: num
+
+  defp tokenize_year(year) do
+    try do
+      {num, _} = year |> Integer.parse()
+      num
+    rescue
+      FunctionClauseError -> year
+    end
+  end
 
   defp group_names(struct_list, names) do
     Enum.reduce(names, %{}, fn name, acc ->
@@ -59,8 +72,7 @@ defmodule GenReport.YearCalculator do
   end
 
   defp filter_names(name, struct_list) do
-    Enum.filter(struct_list, fn person ->
-      person.name == name
-    end)
+    struct_list
+    |> Enum.filter(fn person -> person.name == name end)
   end
 end

@@ -28,7 +28,7 @@ defmodule GenReport.MonthsCalculator do
   defp parse_months_to_extense(struct_list) do
     struct_list
     |> Enum.map(fn person ->
-      Map.put(person, :month, @months[person.month])
+      Map.put(person, :month, person.month)
     end)
   end
 
@@ -57,9 +57,13 @@ defmodule GenReport.MonthsCalculator do
   end
 
   defp parse_int(hour) do
-    hour
-    |> Integer.parse()
-    |> get_int_part()
+    try do
+      hour
+      |> Integer.parse()
+      |> get_int_part()
+    rescue
+      FunctionClauseError -> hour
+    end
   end
 
   defp get_int_part({num, _}), do: num

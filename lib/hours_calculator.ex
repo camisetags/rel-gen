@@ -30,7 +30,11 @@ defmodule GenReport.HoursCalculator do
   end
 
   defp parse_key_to_int(person, key) do
-    {num, _} = person[key] |> Integer.parse()
-    num
+    try do
+      {num, _} = person[key] |> Integer.parse()
+      num
+    rescue
+      FunctionClauseError -> person[key]
+    end
   end
 end
